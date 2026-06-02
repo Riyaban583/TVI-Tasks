@@ -3,7 +3,6 @@ import { getAnalytics } from "firebase/analytics";
 import { getRemoteConfig } from "firebase/remote-config";
 
 
-
 const app = initializeApp(firebaseConfig);
 
 // Analytics
