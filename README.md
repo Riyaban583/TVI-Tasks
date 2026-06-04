@@ -129,7 +129,7 @@ Deployment        ████░░░░░░░░░░░░  25%
 - [ ] Built complete REST API with Express
 - [ ] Deployed full-stack app to Firebase Hosting
 - [ ] Implemented JWT-based auth system
-- [ ] Completed capstone full-stack project
+- [ ] Completed capstone full-stack project with full stack developer intern
 
 ---
 
