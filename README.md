@@ -1,185 +1,265 @@
-<div align="center">
+# 🏦 Bank Statement Digitizer
 
-# 🚀 TVF Full Stack Developer Journey
-
-**A living repository of code, growth, and real-world engineering — by Riya Bansal**
-
-[![GitHub](https://img.shields.io/badge/GitHub-Riyaban583-181717?style=flat-square&logo=github)](https://github.com/Riyaban583)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/your-profile)
-[![Status](https://img.shields.io/badge/Status-Actively%20Learning-22c55e?style=flat-square)](#)
-[![Last Updated](https://img.shields.io/badge/Updated-Daily-f97316?style=flat-square)](#)
-
-</div>
+> Automatically extract, parse, and store transaction data from bank statement PDFs — with multi-bank support, password protection handling, and a unified transaction schema stored in Firebase Firestore.
 
 ---
 
-## 👩‍💻 About Me
+## 📋 Table of Contents
 
-Hi, I'm **Riya Bansal** — a passionate Full Stack Developer in the making.
-
-I'm enrolled in the **TVF Full Stack Development Program**, where I build real-world applications, tackle daily challenges, and develop production-grade skills across the entire web stack — from pixel-perfect UIs to cloud-deployed backends.
-
-This repository is my **public engineering journal**: every task, every bug, every breakthrough — documented and version-controlled.
-
----
-
-## 🎯 What This Repository Is About
-
-| Goal | How It's Reflected Here |
-|------|------------------------|
-| 🧱 Master Full Stack concepts | Structured tasks from HTML basics to cloud deployment |
-| 🏗️ Build real-world projects | Full-stack apps with auth, databases, and APIs |
-| ⚙️ Learn industry workflows | Git branching, PR practices, commit conventions |
-| 🧠 Improve problem-solving | Daily coding challenges and debugging logs |
-| 📦 Work with modern tooling | React, Firebase, Node.js, MongoDB, Express |
-| 📈 Track progress over time | Daily commits with descriptive messages |
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Supported Banks](#supported-banks)
+- [PDF Processing Pipeline](#pdf-processing-pipeline)
+- [Transaction Schema](#transaction-schema)
+- [Firestore Collections](#firestore-collections)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [Testing](#testing)
+- [Project Status](#project-status)
 
 ---
 
-## 🛠️ Tech Stack
+## Overview
 
-### Frontend
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
-![React](https://img.shields.io/badge/React.js-61DAFB?style=flat-square&logo=react&logoColor=black)
-![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?style=flat-square&logo=bootstrap&logoColor=white)
-
-### Backend
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white)
-![Express](https://img.shields.io/badge/Express.js-000000?style=flat-square&logo=express&logoColor=white)
-
-### Database
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white)
-![Firebase](https://img.shields.io/badge/Firebase%20Firestore-FFCA28?style=flat-square&logo=firebase&logoColor=black)
-
-### Authentication & Cloud
-![Firebase Auth](https://img.shields.io/badge/Firebase%20Auth-FFCA28?style=flat-square&logo=firebase&logoColor=black)
-![JWT](https://img.shields.io/badge/JWT-000000?style=flat-square&logo=jsonwebtokens&logoColor=white)
-![Cloud Functions](https://img.shields.io/badge/Cloud%20Functions-4285F4?style=flat-square&logo=google-cloud&logoColor=white)
-
-### Tools & Workflow
-![Git](https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white)
-![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)
-![VS Code](https://img.shields.io/badge/VS%20Code-007ACC?style=flat-square&logo=visual-studio-code&logoColor=white)
+Bank Statement Digitizer is a **React + Firebase** web application that transforms bank statement PDFs into structured, searchable transaction data. Upload a statement, and the app automatically identifies the bank, parses transactions using bank-specific logic, normalizes the data into a common format, and stores it in Firebase Firestore — all in a single seamless flow.
 
 ---
 
-## 📂 Repository Structure
+## Features
+
+### 📄 PDF Processing
+- Upload bank statement PDFs via a clean UI
+- Support for **password-protected PDFs**
+- Text extraction powered by **PDF.js**
+- Graceful error handling for corrupt or unsupported files
+
+### 🏛️ Multi-Bank Support
+| Bank | Date Format | Transaction Markers |
+|------|-------------|---------------------|
+| SBI  | `DD/MM/YYYY` | `Cr` / `Dr` |
+| HDFC | `DD-MM-YYYY` | Column-based structure |
+| ICICI | `DD/MM/YYYY` | Standard row parsing |
+
+### ⚙️ Transaction Processing
+- Automatic bank detection from statement content
+- Bank-specific parsers for accurate extraction
+- Normalization into a **unified transaction schema**
+- Seamless storage to Firestore
+
+### 📊 Dashboard
+- View all parsed transactions in one place
+- Search and filter transactions
+- Real-time Firestore integration
+
+### 🛡️ Error Handling
+| Error Code | Description |
+|------------|-------------|
+| `WRONG_PASSWORD` | PDF requires a password or password is incorrect |
+| `CORRUPT_PDF` | PDF file is damaged or unreadable |
+| `UNSUPPORTED_BANK` | Statement format does not match any known bank |
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React, Vite, Tailwind CSS, React Router |
+| Backend | Firebase Firestore, Firebase Functions |
+| PDF Processing | `pdfjs-dist` |
+
+---
+
+## Project Structure
 
 ```
-TVF/
+bank-statement-digitizer/
 │
-├── 📁 Task-01/          # HTML & CSS fundamentals
-├── 📁 Task-02/          # JavaScript ES6+ concepts
-├── 📁 Task-03/          # React.js components & hooks
-├── 📁 Task-04/          # Firebase integration
-├── 📁 Task-05/          # REST API with Node + Express
+├── docs/
+│   └── samples.md                  # Sample file documentation
 │
-├── 📁 Projects/
-│   ├── 📁 Frontend/     # UI-focused mini projects
-│   ├── 📁 Backend/      # API & server-side projects
-│   └── 📁 FullStack/    # End-to-end full stack apps
+├── samples/                        # Sample bank statements for testing
+│   ├── sbi-sample.pdf
+│   ├── hdfc-sample.pdf
+│   ├── icici-sample.pdf
+│   └── axis-sample.pdf
 │
-├── 📁 Notes/            # Concepts, cheat sheets, references
-├── 📁 Resources/        # Useful links, tools, guides
-└── 📄 README.md
+├── functions/                      # Firebase Cloud Functions
+│   ├── index.js
+│   ├── pdfService.js               # PDF unlock, extraction, row grouping
+│   └── parsers/
+│       ├── index.js                # Parser registry & bank detection
+│       ├── sbi.js
+│       ├── hdfc.js
+│       └── icici.js
+│
+├── src/
+│   ├── components/                 # Reusable UI components
+│   ├── firebase/                   # Firebase config & initialization
+│   ├── pages/                      # Route-level page components
+│   └── services/                   # API & Firestore service layer
+│
+├── .env                            # Environment variables (not committed)
+├── firebase.json
+├── firestore.rules
+├── package.json
+└── README.md
 ```
 
 ---
 
-## 📅 Daily Progress Log
+## Supported Banks
 
-This repository is updated **daily** with:
+### SBI (State Bank of India)
+- Date format: `DD/MM/YYYY`
+- Transaction markers: `Cr` (credit) and `Dr` (debit)
 
-- ✅ Assigned tasks from the TVF program
-- 🧩 Coding challenges and algorithm practice
-- 🔨 Mini-project builds
-- 🔥 Firebase implementations (Auth, Firestore, Functions)
-- 🌐 REST API development and integration
-- 🗄️ Database design and CRUD operations
-- 🔐 Authentication systems (Firebase Auth, JWT)
-- ☁️ Cloud deployment exercises
-- 📓 Learning notes and concept breakdowns
+### HDFC Bank
+- Date format: `DD-MM-YYYY`
+- Column-based transaction structure
+
+### ICICI Bank
+- Date format: `DD/MM/YYYY`
+- Standard transaction row parsing
 
 ---
 
-## 🌟 Current Focus Areas
+## PDF Processing Pipeline
+
+Each uploaded PDF goes through the following stages:
 
 ```
-React.js          ████████████░░░░  75%
-Firebase          ██████████░░░░░░  62%
-Node.js/Express   ████████░░░░░░░░  50%
-MongoDB           ███████░░░░░░░░░  45%
-REST APIs         █████████░░░░░░░  55%
-Authentication    ████████████░░░░  73%
-Deployment        ████░░░░░░░░░░░░  25%
+PDF Upload
+    │
+    ▼
+unlockPdf()           ← Handle password-protected PDFs
+    │
+    ▼
+getPdfItems()         ← Extract raw text items via PDF.js
+    │
+    ▼
+groupItemsIntoRows()  ← Reconstruct logical rows from PDF layout
+    │
+    ▼
+detectBank()          ← Identify bank from statement content
+    │
+    ▼
+Bank Parser           ← Apply bank-specific parsing logic
+    │
+    ▼
+normalizeTransactions() ← Convert to unified transaction schema
+    │
+    ▼
+Firestore Storage     ← Persist to `transactions` collection
 ```
 
 ---
 
-## 🏆 Milestones
+## Transaction Schema
 
-- [x] Completed HTML5 & CSS3 fundamentals
-- [x] Built responsive layouts with Bootstrap
-- [x] Mastered JavaScript ES6+ features
-- [x] Created React components with hooks
-- [x] Integrated Firebase Authentication
-- [x] Performed Firestore CRUD operations
-- [ ] Built complete REST API with Express
-- [ ] Deployed full-stack app to Firebase Hosting
-- [ ] Implemented JWT-based auth system
-- [ ] Completed capstone full-stack project with full stack developer intern
+All bank statements — regardless of source format — are normalized into the following structure:
 
----
-
-## 📌 Featured Projects
-
-> Projects will be updated as they are completed.
-
-| # | Project | Tech Stack | Status |
-|---|---------|-----------|--------|
-| 1 | Firebase Auth App | React + Firebase Auth | ✅ Completed |
-| 2 | Firestore CRUD App | React + Firestore | ✅ Completed |
-| 3 | REST API Server | Node.js + Express + MongoDB | 🔄 In Progress |
-| 4 | Full Stack App | React + Node + MongoDB + JWT | 📅 Upcoming |
+```js
+{
+  date: "01/05/2026",          // DD/MM/YYYY format
+  description: "Salary Credit", // Transaction narration
+  amount: "50000",              // Transaction amount (as string)
+  type: "credit",               // "credit" or "debit"
+  balance: "60000"              // Running account balance
+}
+```
 
 ---
 
-## 📖 How to Explore This Repo
+## Firestore Collections
+
+| Collection | Description |
+|------------|-------------|
+| `transactions` | Normalized transaction records from parsed statements |
+| `users` | User account information |
+| `statements` | Metadata for uploaded statement files |
+
+---
+
+## Getting Started
+
+### Prerequisites
+- Node.js ≥ 16
+- Firebase project (see [Environment Variables](#environment-variables))
+
+### Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/Riyaban583/TVF.git
+git clone https://github.com/your-username/bank-statement-digitizer.git
+cd bank-statement-digitizer
 
-# Navigate to a specific task
-cd TVF/Task-01
-
-# Install dependencies (if any)
+# Install dependencies
 npm install
 
-# Run the project
-npm start
+# Start the development server
+npm run dev
 ```
 
----
-
-## ⭐ Support This Journey
-
-If you find this repository helpful or inspiring:
-
-- 🌟 **Star** the repository
-- 🍴 **Fork** it to start your own learning journal
-- 👀 **Watch** for daily updates
+The app will be available at `http://localhost:5173`.
 
 ---
 
-<div align="center">
+## Environment Variables
 
-**This repository is actively maintained and updated with new tasks, projects, and learning milestones.**
+Create a `.env` file in the project root with your Firebase project credentials:
 
-*Made with ❤️ and a lot of ☕ by Riya Bansal*
+```env
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=
+```
 
+> ⚠️ The `.env` file is listed in `.gitignore` and is **never committed** to version control.
 
+You can find these values in your [Firebase Console](https://console.firebase.google.com/) under **Project Settings → General → Your apps**.
 
-</div>
+---
+
+## Testing
+
+All major components have been tested end-to-end.
+
+### PDF Module
+- [x] PDF Upload
+- [x] Password Handling
+- [x] PDF Parsing
+
+### Firestore
+- [x] Save Transactions
+- [x] Read Transactions
+
+### Parsers
+- [x] SBI Parser
+- [x] HDFC Parser
+- [x] ICICI Parser
+
+### Validation / Error Handling
+- [x] `WRONG_PASSWORD`
+- [x] `CORRUPT_PDF`
+- [x] `UNSUPPORTED_BANK`
+
+### End-to-End Flow
+- [x] Upload → Parse → Normalize → Store
+
+---
+
+## Project Status
+
+**✅ Completed** — Built and tested as part of the Bank Statement Digitizer internship assignment.
+
+---
+
+## 📄 License
+
+This project is for educational/internship purposes. See [LICENSE](LICENSE) for details.
